@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include "jnibwa.h"
 #include "init.h"
-#include "bwa/bwa_commit.h"
 
+#define BWA_COMMIT "cb950614ce7217788780b9a8d445c64cd4d8f62e"
 
 char * jstring_to_chars(JNIEnv* env, jstring in) {
     const char* tmp = (*env)->GetStringUTFChars(env, in, 0);
