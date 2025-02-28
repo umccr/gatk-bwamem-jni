@@ -15,13 +15,9 @@ repositories {
     mavenCentral()
 }
 
-/*
 dependencies {
-    testImplementation {
-	'org.testng:testng:6.9.6'
-    }
+    testImplementation 'org.testng:testng:6.9.6'
 }
-*/
 
 final isRelease = Boolean.getBoolean("release")
 version = (isRelease ? gitVersion() : gitVersion() + "-SNAPSHOT").replaceAll(".dirty", "")
