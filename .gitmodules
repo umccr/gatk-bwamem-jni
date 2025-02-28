@@ -1,0 +1,6 @@
+[submodule "src/main/c/simde-no-tests"]
+	path = src/main/c/simde-no-tests
+	url = https://github.com/simd-everywhere/simde-no-tests
+[submodule "src/main/c/bwa"]
+	path = src/main/c/bwa
+	url = https://github.com/lh3/bwa

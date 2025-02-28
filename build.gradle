@@ -1,12 +1,12 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
 plugins {
     id 'java'
-    id 'maven'
+    id 'maven-publish'
     id 'signing'
     id 'com.palantir.git-version' version '0.5.1' //version helper
 }
@@ -15,9 +15,13 @@ repositories {
     mavenCentral()
 }
 
+/*
 dependencies {
-    testCompile 'org.testng:testng:6.9.6'
+    testImplementation {
+	'org.testng:testng:6.9.6'
+    }
 }
+*/
 
 final isRelease = Boolean.getBoolean("release")
 version = (isRelease ? gitVersion() : gitVersion() + "-SNAPSHOT").replaceAll(".dirty", "")
@@ -69,13 +73,11 @@ javadoc {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    classifier = 'sources'
 }
 
 /**
@@ -90,10 +92,12 @@ artifacts {
 /**
  * Sign non-snapshot releases with our secret key.  This should never need to be invoked directly.
  */
+/*
 signing {
     required { isRelease && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
+*/
 
 def assertLibExists(lib){
     if ( ! file(lib).exists()){
@@ -108,6 +112,46 @@ def assertLibExists(lib){
  *
  * For releasing to your local maven repo, use gradle install
  */
+publishing {
+    repositories {
+        maven {
+            url = uri("${rootProject.projectDir}/maven-repo")
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name.set('gatk-bwamem-jni')
+                packaging = 'jar'
+                description.set('java bindings for the bwa-mem assembler')
+                url.set('http://github.com/broadinstitute/gatk-bwamem-jni')
+
+                scm {
+                    url.set('scm:git@github.com:broadinstitute/gatk-bwamem-jni.git')
+                    connection.set('scm:git@github.com:broadinstitute/gatk-bwamem-jni.git')
+                    developerConnection.set('scm:git@github.com:broadinstitute/gatk-bwamem-jni.git')
+                }
+
+                developers {
+                    developer {
+                        id.set("gatkdev")
+                        name.set("GATK Development Team")
+                        email.set("gatk-dev-public@broadinstitute.org")
+                    }
+                }
+
+                licenses {
+                    license {
+                        name.set('BSD 3-Clause')
+                        url.set('https://github.com/broadinstitute/gatk-bwamem-jni/blob/master/LICENSE.TXT')
+                        distribution.set('repo')
+                    }
+                }
+            }
+        }
+    }
+}
+/*
 uploadArchives {
     doFirst {
         println "Attempting to upload version:$version"
@@ -118,7 +162,7 @@ uploadArchives {
     }
     repositories {
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            //beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: project.findProperty("sonatypeUsername"), password: project.findProperty("sonatypePassword"))
@@ -159,4 +203,4 @@ uploadArchives {
         }
     }
 }
-
+*/

@@ -1,8 +1,7 @@
 .gradle
 .idea
 build
-src/main/c/bwa
-src/main/c/*.o
-src/main/c/*.dylib
-src/main/c/*.so
+*.o
+*.dylib
+*.so
 *.swp
