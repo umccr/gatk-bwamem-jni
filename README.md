@@ -13,7 +13,7 @@ To build you'll need gmake, git, gcc, and Java 23.
 
 ```
 git clone --recursive https://github.com/broadinstitute/gatk-bwamem-jni
-./gradlew install
+./gradlew build
 ```
 
 This will work for testing but will only include a native library for your system.

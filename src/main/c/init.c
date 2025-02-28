@@ -13,7 +13,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
     JNIEnv* env;
     jclass peStatClass;
-    if ((*vm)->GetEnv(vm, &env, JNI_VERSION_1_8) != JNI_OK) {
+    if ((*vm)->GetEnv(vm, (void**)&env, JNI_VERSION_1_8) != JNI_OK) {
          return JNI_ERR;
     }
 

@@ -8,7 +8,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
-    id 'com.palantir.git-version' version '0.5.1' //version helper
+    id 'com.palantir.git-version' version '3.1.0' //version helper
 }
 
 repositories {
@@ -38,10 +38,12 @@ task buildBwaLib(type: Exec){
 }
 
 clean {
-    delete "$cpath/bwa"
     delete "$cpath/$libname*"
     delete fileTree("$cpath") {include "$libname*", "*.o"}
 }
+
+build.dependsOn buildBwaLib
+test.dependsOn buildBwaLib
 
 processResources {
     dependsOn buildBwaLib
@@ -111,10 +113,19 @@ def assertLibExists(lib){
 publishing {
     repositories {
         maven {
-            url = uri("${rootProject.projectDir}/maven-repo")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/umccr/gatk-bwamem-jni")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
     publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+        /*
         mavenJava(MavenPublication) {
             pom {
                 name.set('gatk-bwamem-jni')
@@ -145,58 +156,6 @@ publishing {
                 }
             }
         }
-    }
+       */
+   }
 }
-/*
-uploadArchives {
-    doFirst {
-        println "Attempting to upload version:$version"
-        if (isRelease){
-            assertLibExists("$cpath/${libname}.Linux.so")
-            assertLibExists("$cpath/${libname}.Darwin.dylib")
-        }
-    }
-    repositories {
-        mavenDeployer {
-            //beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: project.findProperty("sonatypeUsername"), password: project.findProperty("sonatypePassword"))
-            }
-
-            snapshotRepository(url: "https://broadinstitute.jfrog.io/broadinstitute/libs-snapshot-local") {
-                authentication(userName: System.env.ARTIFACTORY_USERNAME, password: System.env.ARTIFACTORY_PASSWORD)
-            }
-
-            pom.project {
-                name 'gatk-bwamem-jni'
-                packaging 'jar'
-                description 'java bindings for the bwa-mem assembler'
-                url 'http://github.com/broadinstitute/gatk-bwamem-jni'
-
-                scm {
-                    url 'scm:git@github.com:broadinstitute/gatk-bwamem-jni.git'
-                    connection 'scm:git@github.com:broadinstitute/gatk-bwamem-jni.git'
-                    developerConnection 'scm:git@github.com:broadinstitute/gatk-bwamem-jni.git'
-                }
-
-                developers {
-                    developer {
-                        id = "gatkdev"
-                        name = "GATK Development Team"
-                        email = "gatk-dev-public@broadinstitute.org"
-                    }
-                }
-
-                licenses {
-                    license {
-                        name 'BSD 3-Clause'
-                        url 'https://github.com/broadinstitute/gatk-bwamem-jni/blob/master/LICENSE.TXT'
-                        distribution 'repo'
-                    }
-                }
-            }
-        }
-    }
-}
-*/

@@ -22,7 +22,7 @@ libbwa.$(LIB_EXT): $(JNI_BASE_NAME).o init.o jnibwa.o bwa/libbwa.a
 	$(CC) -ggdb -dynamiclib -shared -o $@ $^ -lm -lz -lpthread
 
 bwa:
-	$(info "Bwa submodule present already")
+	$(info "No patching anymore here")
 
 bwa/libbwa.a: bwa
 	$(MAKE) CFLAGS="$(CFLAGS)" -C bwa libbwa.a
@@ -34,6 +34,6 @@ jnibwa.o: jnibwa.c jnibwa.h init.h bwa
 init.o: init.c init.h
 
 clean:
-	rm -rf bwa *.o *.$(LIB_EXT)
+	rm -rf *.o *.$(LIB_EXT)
 
 .PHONY: all clean

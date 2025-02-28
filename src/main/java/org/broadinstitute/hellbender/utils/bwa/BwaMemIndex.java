@@ -443,9 +443,9 @@ public final class BwaMemIndex implements AutoCloseable {
                         final String osName = System.getProperty("os.name", "unknown").toUpperCase();
                         final String osArch = System.getProperty("os.arch");
                         final String libName;
-                        if ( !"x86_64".equals(osArch) && !"amd64".equals(osArch) ) {
+                        if ( !"x86_64".equals(osArch) && !"amd64".equals(osArch) && !"aarch64".equals(osArch)) {
                             throw new IllegalStateException(
-                                    "We have pre-built fermi-lite binaries only for x86_64 and amd64.  "+
+                                    "We have pre-built fermi-lite binaries only for x86_64, amd64 and aarch64. "+
                                             "Your os.arch is "+osArch+"."+
                                             "Set property LIBBWA_PATH to point to a native library for your architecture.");
                         }
