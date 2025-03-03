@@ -40,7 +40,7 @@ int jobject_to_mem_pestat_t(JNIEnv* env, jobject in, mem_pestat_t *out) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createReferenceIndex( JNIEnv* env, jclass cls, jstring jReferenceFileName, jstring jIndexPrefix, jstring jAlgoName) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_createReferenceIndex( JNIEnv* env, jclass cls, jstring jReferenceFileName, jstring jIndexPrefix, jstring jAlgoName) {
 
 	char *reference_file_name = jstring_to_chars(env, jReferenceFileName);
 	char *index_prefix = jstring_to_chars(env, jIndexPrefix);
@@ -63,7 +63,7 @@ Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createReferenceIndex( J
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createIndexImageFile( JNIEnv* env, jclass cls, jstring referencePrefix, jstring imageFileName ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_createIndexImageFile( JNIEnv* env, jclass cls, jstring referencePrefix, jstring imageFileName ) {
 	char *refName = jstring_to_chars(env, referencePrefix);
 	char *imgName = jstring_to_chars(env, imageFileName);
 	jboolean res = !jnibwa_createIndexFile( refName, imgName );
@@ -72,7 +72,7 @@ Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createIndexImageFile( J
 }
 
 JNIEXPORT jlong JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_openIndex( JNIEnv* env, jclass cls, jstring memImgFilename ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_openIndex( JNIEnv* env, jclass cls, jstring memImgFilename ) {
 	char *fname = jstring_to_chars(env, memImgFilename);
 	int fd = open(fname, O_RDONLY);
 	free(fname);
@@ -81,13 +81,13 @@ Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_openIndex( JNIEnv* env,
 }
 
 JNIEXPORT jint JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_destroyIndex( JNIEnv* env, jclass cls, jlong idxAddr ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_destroyIndex( JNIEnv* env, jclass cls, jlong idxAddr ) {
 	if ( !idxAddr ) return 0;
 	return jnibwa_destroyIndex((bwaidx_t*)idxAddr);
 }
 
 JNIEXPORT jobject JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createDefaultOptions( JNIEnv* env, jclass cls ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_createDefaultOptions( JNIEnv* env, jclass cls ) {
 	return (*env)->NewDirectByteBuffer(env, mem_opt_init(), sizeof(mem_opt_t));
 }
 
@@ -98,7 +98,7 @@ Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createDefaultOptions( J
 //     a 32-bit int giving the length of the name
 //     that many bytes of name
 JNIEXPORT jobject JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_getRefContigNames( JNIEnv* env, jclass cls, jlong idxAddr ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_getRefContigNames( JNIEnv* env, jclass cls, jlong idxAddr ) {
 	if ( !idxAddr ) return 0;
 	size_t bufSize = 0;
 	void* bufMem = jnibwa_getRefContigNames((bwaidx_t*)idxAddr, &bufSize);
@@ -140,7 +140,7 @@ typedef struct {
 } Alignment;
 */
 JNIEXPORT jobject JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createAlignments(
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_createAlignments(
 				JNIEnv* env, jclass cls, jobject seqsBuf, jlong idxAddr, jobject optsBuf, jobject frPEStats ) {
 	bwaidx_t* pIdx = (bwaidx_t*)idxAddr;
 	mem_opt_t* pOpts = (*env)->GetDirectBufferAddress(env, optsBuf);
@@ -155,11 +155,11 @@ Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_createAlignments(
 }
 
 JNIEXPORT void JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_destroyByteBuffer( JNIEnv* env, jclass cls, jobject alnBuf ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_destroyByteBuffer( JNIEnv* env, jclass cls, jobject alnBuf ) {
 	free((*env)->GetDirectBufferAddress(env, alnBuf));
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_broadinstitute_hellbender_utils_bwa_BwaMemIndex_getVersion( JNIEnv* env, jclass cls ) {
+Java_org_umccr_java_hellbender_utils_bwa_BwaMemIndex_getVersion( JNIEnv* env, jclass cls ) {
 	return (*env)->NewStringUTF(env, BWA_COMMIT);
 }

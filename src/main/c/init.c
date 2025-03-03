@@ -17,7 +17,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
          return JNI_ERR;
     }
 
-    FAIL_IF_NULL(peStatClass = (*env)->FindClass(env, "org/broadinstitute/hellbender/utils/bwa/BwaMemPairEndStats"));
+    FAIL_IF_NULL(peStatClass = (*env)->FindClass(env, "org/umccr/java/hellbender/utils/bwa/BwaMemPairEndStats"));
     FAIL_IF_NULL(peStatClass_failedID = (*env)->GetFieldID(env, peStatClass, "failed", "Z"));
     FAIL_IF_NULL(peStatClass_lowID = (*env)->GetFieldID(env, peStatClass, "low", "I"));
     FAIL_IF_NULL(peStatClass_highID = (*env)->GetFieldID(env, peStatClass, "high", "I"));

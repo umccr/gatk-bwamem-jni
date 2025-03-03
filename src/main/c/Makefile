@@ -14,7 +14,7 @@ else
 LIB_EXT=Linux.so
 endif
 
-JNI_BASE_NAME=org_broadinstitute_hellbender_utils_bwa_BwaMemIndex
+JNI_BASE_NAME=org_umccr_java_hellbender_utils_bwa_BwaMemIndex
 
 all: libbwa.$(LIB_EXT)
 
