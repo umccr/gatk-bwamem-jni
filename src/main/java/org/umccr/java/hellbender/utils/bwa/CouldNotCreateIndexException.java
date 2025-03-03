@@ -1,4 +1,4 @@
-package org.broadinstitute.hellbender.utils.bwa;
+package org.umccr.java.hellbender.utils.bwa;
 
 /**
  * Created by valentin on 7/29/17.

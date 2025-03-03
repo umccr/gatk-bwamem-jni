@@ -1,4 +1,4 @@
-package org.broadinstitute.hellbender.utils.bwa;
+package org.umccr.java.hellbender.utils.bwa;
 
 /**
  * Equivalent to Bwa's mem_pestat_t struct.

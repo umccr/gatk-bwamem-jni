@@ -1,4 +1,4 @@
-package org.broadinstitute.hellbender.utils.bwa;
+package org.umccr.java.hellbender.utils.bwa;
 
 import java.io.*;
 import java.nio.ByteBuffer;

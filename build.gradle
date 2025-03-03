@@ -20,8 +20,7 @@ dependencies {
 }
 
 final isRelease = Boolean.getBoolean("release")
-version = (isRelease ? gitVersion() : gitVersion() + "-SNAPSHOT").replaceAll(".dirty", "")
-group = "org.broadinstitute"
+version = "1.1.0"
 String cpath = "src/main/c"
 String libname = "libbwa"
 
@@ -86,16 +85,6 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-
-/**
- * Sign non-snapshot releases with our secret key.  This should never need to be invoked directly.
- */
-/*
-signing {
-    required { isRelease && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
-*/
 
 def assertLibExists(lib){
     if ( ! file(lib).exists()){

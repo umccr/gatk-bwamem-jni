@@ -1,4 +1,4 @@
-package org.broadinstitute.hellbender.utils.bwa;
+package org.umccr.java.hellbender.utils.bwa;
 
 /**
  * Info from the Aligner about an alignment to reference that it discovered for some sequence.
