@@ -93,6 +93,8 @@ def assertLibExists(lib){
     }
 }
 
+import com.vanniktech.maven.publish.SonatypeHost
+
 mavenPublishing {
   publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
   coordinates("org.umccr.java", "gatk-bwamem-jni", pkg_version)
