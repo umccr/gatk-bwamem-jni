@@ -17,7 +17,7 @@ jobs:
       - name: Set up dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential gradle
+          sudo apt-get install -y build-essential gradle gnupg
 
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v4
