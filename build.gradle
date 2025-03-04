@@ -6,7 +6,7 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'maven-publish'
+    id "com.vanniktech.maven.publish" version "0.31.0-rc1"
     id 'signing'
     id 'com.palantir.git-version' version '3.1.0' //version helper
 }
@@ -19,8 +19,8 @@ dependencies {
     testImplementation 'org.testng:testng:6.9.6'
 }
 
+final pkg_version = "1.1.0"
 final isRelease = Boolean.getBoolean("release")
-version = "1.1.0"
 String cpath = "src/main/c"
 String libname = "libbwa"
 
@@ -93,58 +93,34 @@ def assertLibExists(lib){
     }
 }
 
-/**
- * Upload a release to sonatype.  You must be an authorized uploader and have your sonatype
- * username and password information in your gradle properties file.  See the readme for more info.
- *
- * For releasing to your local maven repo, use gradle install
- */
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/umccr/gatk-bwamem-jni")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
+mavenPublishing {
+  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+  coordinates("org.umccr.java", "gatk-bwamem-jni", pkg_version)
+  signAllPublications()
+
+  pom {
+    name = "gatk-bwamem-jni"
+    description = "java bindings for the bwa-mem assembler"
+    inceptionYear = "2025"
+    url = "https://github.com/umccr/gatk-bwamem-jni/"
+    licenses {
+      license {
+        name = "BSD 3-Clause"
+        url = "https://github.com/umccr/gatk-bwamem-jni/blob/master/LICENSE.TXT"
+        distribution = "repo"
+      }
     }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-        /*
-        mavenJava(MavenPublication) {
-            pom {
-                name.set('gatk-bwamem-jni')
-                packaging = 'jar'
-                description.set('java bindings for the bwa-mem assembler')
-                url.set('http://github.com/broadinstitute/gatk-bwamem-jni')
-
-                scm {
-                    url.set('scm:git@github.com:broadinstitute/gatk-bwamem-jni.git')
-                    connection.set('scm:git@github.com:broadinstitute/gatk-bwamem-jni.git')
-                    developerConnection.set('scm:git@github.com:broadinstitute/gatk-bwamem-jni.git')
-                }
-
-                developers {
-                    developer {
-                        id.set("gatkdev")
-                        name.set("GATK Development Team")
-                        email.set("gatk-dev-public@broadinstitute.org")
-                    }
-                }
-
-                licenses {
-                    license {
-                        name.set('BSD 3-Clause')
-                        url.set('https://github.com/broadinstitute/gatk-bwamem-jni/blob/master/LICENSE.TXT')
-                        distribution.set('repo')
-                    }
-                }
-            }
-        }
-       */
-   }
+    developers {
+      developer {
+        id = "umccr"
+        name = "UMCCR"
+        url = "https://github.com/umccr/"
+      }
+    }
+    scm {
+      url = "https://github.com/umccr/gatk-bwamem-jni/"
+      connection = "scm:git:git://github.com/umccr/gatk-bwamem-jni.git"
+      developerConnection = "scm:git:ssh://git@github.com/umccr/gatk-bwamem-jni.git"
+    }
+  }
 }
