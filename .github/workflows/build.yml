@@ -26,7 +26,7 @@ jobs:
           distribution: 'corretto'
           server-id: central
           server-username: umccr
-          server-password: ${{ secrets.MAVEN_PASSWORD }}
+          server-password: ${{ secrets.CENTRAL_WEB_PASSWORD }}
           gpg-private-key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
           gpg-passphrase: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
 
