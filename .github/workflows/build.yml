@@ -4,9 +4,16 @@ on:
   push:
     branches:
       - aarch64_org.umccr.java_package
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
 
 jobs:
   build:
+    environment: ${{ inputs.environment }}
     runs-on: [ubuntu-24.04-arm]
     steps:
       - name: Checkout repository
@@ -26,9 +33,9 @@ jobs:
           distribution: 'corretto'
           server-id: central
           server-username: umccr
-          server-password: ${{ secrets.CENTRAL_WEB_PASSWORD }}
-          gpg-private-key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-          gpg-passphrase: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+          server-password: CENTRAL_WEB_PASSWORD
+          gpg-private-key: ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY
+          gpg-passphrase: ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -39,10 +46,10 @@ jobs:
       - name: Publish package
         run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
         env:
-          MAVEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+          MAVEN_USERNAME: CENTRAL_TOKEN_USERNAME
+          MAVEN_PASSWORD: CENTRAL_TOKEN_PASSWORD
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD
