@@ -19,13 +19,14 @@ jobs:
     environment: ${{ inputs.environment }}
     runs-on: [ubuntu-24.04-arm]
     steps:
-      - name: Install gpg secret key
-        env:
-          ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-        run: |
-          echo -n "$ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY" | base64 --decode | gpg --import
-          # Verify gpg secret key
-          gpg --list-secret-keys --keyid-format LONG
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          passphrase: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+
+      - name: List keys
+        run: gpg -K
 
       - name: Checkout repository
         uses: actions/checkout@v4
