@@ -20,8 +20,10 @@ jobs:
     runs-on: [ubuntu-24.04-arm]
     steps:
       - name: Install gpg secret key
+        env:
+          ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
         run: |
-          echo -n "${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}" | base64 --decode | gpg --import
+          echo -n "$ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY" | base64 --decode | gpg --import
           # Verify gpg secret key
           gpg --list-secret-keys --keyid-format LONG
 
