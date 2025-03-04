@@ -18,8 +18,7 @@ jobs:
     steps:
       - name: Install gpg secret key
         run: |
-          # Install gpg secret key
-          cat <(echo -e "$ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY") | gpg --batch --import
+          echo -n "$ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY" | base64 --decode | gpg --import
           # Verify gpg secret key
           gpg --list-secret-keys --keyid-format LONG
 
