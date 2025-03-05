@@ -93,10 +93,6 @@ def assertLibExists(lib){
     }
 }
 
-signing {
-    useGpgCmd()
-}
-
 import com.vanniktech.maven.publish.SonatypeHost
 
 mavenPublishing {
