@@ -32,9 +32,6 @@ jobs:
           echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
           echo RELOADAGENT | gpg-connect-agent
 
-      - name: Dump secring.gpg
-        run: gpg --export-secret-keys > ~/.gnupg/secring.gpg
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
