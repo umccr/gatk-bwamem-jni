@@ -19,6 +19,10 @@ dependencies {
     testImplementation 'org.testng:testng:6.9.6'
 }
 
+signing {
+    sign publishing.publications
+}
+
 final pkg_version = "1.1.0"
 final isRelease = Boolean.getBoolean("release")
 String cpath = "src/main/c"
