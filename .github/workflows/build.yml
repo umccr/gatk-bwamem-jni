@@ -26,10 +26,11 @@ jobs:
           passphrase: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
           trust_level: 5
 
-      - name: Show config
+      - name: Tweak GPG config to allow for passphrases passed in via env vars or stdin
         run: |
-          cat ~/.gnupg/gpg.conf
-          cat ~/.gnupg/gpg-agent.conf
+          echo "use-agent\npinentry-mode loopback" > ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
+          echo RELOADAGENT | gpg-connect-agent
 
       - name: Dump secring.gpg
         run: gpg --export-secret-keys > ~/.gnupg/secring.gpg
