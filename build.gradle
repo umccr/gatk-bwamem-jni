@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id 'java'
     id 'com.vanniktech.maven.publish' version '0.31.0-rc1'
-  //  id 'signing'
+    id 'signing'
     id 'com.palantir.git-version' version '3.1.0' //version helper
 }
 
@@ -91,6 +91,10 @@ def assertLibExists(lib){
         throw new GradleException("Could not perform a maven release because $lib is missing.  You must include both OSX and Linux binaries to release. " +
                 "You can run scripts/build_both_dylib_and_so.sh to build both if you are on a Broad Institute connected mac.")
     }
+}
+
+signing {
+    useGpgCmd()
 }
 
 import com.vanniktech.maven.publish.SonatypeHost
