@@ -24,9 +24,12 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
           passphrase: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+          trust_level: 5
 
-      - name: List keys
-        run: gpg -K
+      - name: Show config
+        run: |
+          cat ~/.gnupg/gpg.conf
+          cat ~/.gnupg/gpg-agent.conf
 
       - name: Dump secring.gpg
         run: gpg --export-secret-keys > ~/.gnupg/secring.gpg
