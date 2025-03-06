@@ -1,4 +1,4 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.umccr.java/gatk-bwamem-jni/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.umccr.java/gatk-bwamem-jni)
+![Maven Central Version](https://img.shields.io/maven-central/v/org.umccr.java/gatk-bwamem-jni)
 
 # gatk-bwamem-jni
 JNI code for bwa mem.
@@ -15,4 +15,4 @@ git clone --recursive https://github.com/umccr/gatk-bwamem-jni
 ./gradlew build
 ```
 
-This will work for testing but will only include a native library for your system.
+This will only include a native library for your system (or CI/CD runner).
