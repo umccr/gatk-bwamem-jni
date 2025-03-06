@@ -23,8 +23,7 @@ signing {
     sign publishing.publications
 }
 
-final pkg_version = "1.1.0"
-final isRelease = Boolean.getBoolean("release")
+final pkg_version = "1.1.1" // Manually bumped version, future TODO: integrate better w/ git and CI/CD
 String cpath = "src/main/c"
 String libname = "libbwa"
 
@@ -69,37 +68,19 @@ test {
     }
 }
 
-javadoc {
-    options.addStringOption('Xdoclint:none', '-quiet')
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-}
-
-/**
- *This specifies what artifacts will be built and uploaded when performing a maven upload.
- */
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-}
-
-def assertLibExists(lib){
-    if ( ! file(lib).exists()){
-        throw new GradleException("Could not perform a maven release because $lib is missing.  You must include both OSX and Linux binaries to release. " +
-                "You can run scripts/build_both_dylib_and_so.sh to build both if you are on a Broad Institute connected mac.")
-    }
-}
-
 import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
 
 mavenPublishing {
+  // the first parameter configures the -javadoc artifact, possible values:
+  // - `JavadocJar.None()` don't publish this artifact
+  // - `JavadocJar.Empty()` publish an emprt jar
+  // - `JavadocJar.Javadoc()` to publish standard javadocs
+  // the second whether to publish a sources jar
+  configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+
+  // Publish to Maven Central
   publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
   signAllPublications()
   coordinates("org.umccr.java", "gatk-bwamem-jni", pkg_version)
