@@ -19,19 +19,6 @@ jobs:
     environment: ${{ inputs.environment }}
     runs-on: [ubuntu-24.04-arm]
     steps:
-#      - name: Import GPG key
-#        uses: crazy-max/ghaction-import-gpg@v6
-#        with:
-#          gpg_private_key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-#          passphrase: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
-#          trust_level: 5
-#
-#      - name: Tweak GPG config to allow for passphrases passed in via env vars or stdin
-#        run: |
-#          echo "use-agent\npinentry-mode loopback" > ~/.gnupg/gpg.conf
-#          echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
-#          echo RELOADAGENT | gpg-connect-agent
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
