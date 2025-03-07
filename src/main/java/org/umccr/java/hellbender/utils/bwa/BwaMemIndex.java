@@ -456,7 +456,7 @@ public final class BwaMemIndex implements AutoCloseable {
                             } else {
                                 libName = "/libbwa.osx-x86_64.dylib";
                             }
-                        } else if (osName.contains("Linux")) {
+                        } else if (osName.contains("linux")) {
                             if (osArch.equals("aarch64")) {
                                 libName = "/libbwa.linux-aarch64.so";
                             } else {
