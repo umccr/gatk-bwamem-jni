@@ -6,19 +6,121 @@ permissions:
 
 on:
   push:
-    branches:
-      - master
     tags:
       - '*'
-  workflow_run:
-    workflows: ["blobs"]
-    types:
-      - completed
 
 jobs:
-  on-success:
+  build-linux-aarch64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gradle
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libbwa.linux-aarch64.so
+          path: ./build/resources/main/libbwa.linux-aarch64.so
+
+  build-linux-x86_64:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gradle
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libbwa.linux-x86_64.so
+          path: ./build/resources/main/libbwa.linux-x86_64.so
+
+  build-macos-intel:
+    runs-on: macos-13
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libbwa.osx-x86_64.dylib
+          path: ./build/resources/main/libbwa.osx-x86_64.dylib
+
+  build-macos-arm64:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libbwa.osx-arm64.dylib
+          path: ./build/resources/main/libbwa.osx-arm64.dylib
+
+  release_arch_blobs_on_github:
+    needs: [build-linux-aarch64, build-linux-x86_64, build-macos-intel, build-macos-arm64]
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded artifacts
+        run: ls -R artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*/*
+          body: "Automated release of prebuilt native libraries for gatk-bwamem-jni"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish_maven:
+    needs: [release_arch_blobs_on_github]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,7 +148,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./build/resources/main/
-          github-token: $GITHUB_TOKEN
 
       - name: List Downloaded Artifacts
         run: ls -alr ./build/resources/main
