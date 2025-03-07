@@ -11,17 +11,11 @@ on:
     workflows: ["blobs"]
     types:
       - completed
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
 
 jobs:
   build:
     environment: ${{ inputs.environment }}
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # Only run if blobs.yml succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
