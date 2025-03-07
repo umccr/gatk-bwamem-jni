@@ -45,7 +45,6 @@ clean {
 }
 
 build.dependsOn buildBwaLib
-test.dependsOn buildBwaLib
 
 processResources {
     dependsOn buildBwaLib
@@ -54,6 +53,7 @@ processResources {
 }
 
 test {
+    dependsOn buildBwaLib
     useTestNG()
     testLogging {
         testLogging {
