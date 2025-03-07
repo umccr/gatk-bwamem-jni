@@ -3,7 +3,7 @@ name: blobs
 on:
   push:
      branches:
-       - master
+      - master
     tags:
       - '*'
   workflow_dispatch:
