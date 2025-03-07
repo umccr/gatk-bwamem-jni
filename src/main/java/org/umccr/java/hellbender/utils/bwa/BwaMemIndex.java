@@ -432,42 +432,53 @@ public final class BwaMemIndex implements AutoCloseable {
     }
 
     private static void loadNativeLibrary() {
-        if ( !nativeLibLoaded ) {
-            synchronized(BwaMemIndex.class) {
-                if ( !nativeLibLoaded ) {
+        if (!nativeLibLoaded) {
+            synchronized (BwaMemIndex.class) {
+                if (!nativeLibLoaded) {
                     final String libNameOverride = System.getProperty("LIBBWA_PATH");
-                    if ( libNameOverride != null ) {
+                    if (libNameOverride != null) {
                         System.load(libNameOverride);
-                    }
-                    else {
-                        final String osName = System.getProperty("os.name", "unknown").toUpperCase();
-                        final String osArch = System.getProperty("os.arch");
+                    } else {
+                        final String osName = System.getProperty("os.name", "unknown").toLowerCase();
+                        final String osArch = System.getProperty("os.arch").toLowerCase();
                         final String libName;
-                        if ( !"x86_64".equals(osArch) && !"amd64".equals(osArch) && !"aarch64".equals(osArch)) {
+
+                        if (!osArch.equals("x86_64") && !osArch.equals("amd64") && !osArch.equals("aarch64") && !osArch.equals("arm64")) {
                             throw new IllegalStateException(
-                                    "We have pre-built fermi-lite binaries only for x86_64, amd64 and aarch64. "+
-                                            "Your os.arch is "+osArch+"."+
-                                            "Set property LIBBWA_PATH to point to a native library for your architecture.");
+                                "We have pre-built fermi-lite binaries only for x86_64, amd64, aarch64, and arm64. " +
+                                "Your os.arch is " + osArch + ". " +
+                                "Set property LIBBWA_PATH to point to a native library for your architecture.");
                         }
-                        if ( osName.startsWith("MAC") ) libName = "/libbwa.Darwin.dylib";
-                        else if ( osName.startsWith("LINUX") ) libName = "/libbwa.Linux.so";
-                        else {
-                            throw new IllegalStateException(
-                                    "We have pre-built fermi-lite binaries only for Linux and Mac.  "+
-                                            "Your os.name is "+osName+"."+
-                                            "Set property LIBBWA_PATH to point to a native library for your operating system.");
-                        }
-                        try ( final InputStream is = BwaMemIndex.class.getResourceAsStream(libName) ) {
-                            if ( is == null ) {
-                                throw new IllegalStateException("Can't find resource "+libName);
+
+                        if (osName.contains("mac")) {
+                            if (osArch.equals("arm64")) {
+                                libName = "/libbwa.osx-arm64.dylib";
+                            } else {
+                                libName = "/libbwa.osx-x86_64.dylib";
                             }
-                            final File tmpFile = File.createTempFile("libbwa.",".jnilib");
+                        } else if (osName.contains("linux")) {
+                            if (osArch.equals("aarch64")) {
+                                libName = "/libbwa.linux-aarch64.so";
+                            } else {
+                                libName = "/libbwa.linux-x86_64.so";
+                            }
+                        } else {
+                            throw new IllegalStateException(
+                                "We have pre-built fermi-lite binaries only for Linux and Mac. " +
+                                "Your os.name is " + osName + ". " +
+                                "Set property LIBBWA_PATH to point to a native library for your operating system.");
+                        }
+
+                        try (final InputStream is = BwaMemIndex.class.getResourceAsStream(libName)) {
+                            if (is == null) {
+                                throw new IllegalStateException("Can't find resource " + libName);
+                            }
+                            final File tmpFile = File.createTempFile("libbwa.", ".jnilib");
                             tmpFile.deleteOnExit();
                             Files.copy(is, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                             System.load(tmpFile.getPath());
-                        }
-                        catch (IOException ioe ) {
-                            throw new IllegalStateException("Misconfiguration: Unable to load fermi-lite native library "+libName, ioe);
+                        } catch (IOException ioe) {
+                            throw new IllegalStateException("Misconfiguration: Unable to load fermi-lite native library " + libName, ioe);
                         }
                     }
                     nativeLibLoaded = true;

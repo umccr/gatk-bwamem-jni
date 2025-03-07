@@ -8,10 +8,20 @@ CC=gcc
 
 #OS-dependent extension lookup
 UNAME := $(shell uname)
+ARCH := $(shell uname -m)
+
 ifeq ($(UNAME),Darwin)
-LIB_EXT=Darwin.dylib
-else
-LIB_EXT=Linux.so
+    ifeq ($(ARCH),arm64)
+        LIB_EXT=osx-arm64.dylib
+    else
+        LIB_EXT=osx-x86_64.dylib
+    endif
+else ifeq ($(UNAME),Linux)
+    ifeq ($(ARCH),aarch64)
+        LIB_EXT=linux-aarch64.so
+    else
+        LIB_EXT=linux-x86_64.so
+    endif
 endif
 
 JNI_BASE_NAME=org_umccr_java_hellbender_utils_bwa_BwaMemIndex
