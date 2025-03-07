@@ -1,11 +1,11 @@
-name: Build and Release Binaries
+name: Generate libbwa blobs
 
 on:
   push:
      branches:
        - multiplatform_libbwa_blobs
-#    tags:
-#      - 'v*'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
