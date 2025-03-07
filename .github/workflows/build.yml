@@ -45,19 +45,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Download Release Assets
-        uses: actions/download-release-asset@v1
+      - name: Download Artifacts from blobs.yml
+        uses: actions/download-artifact@v4
         with:
-          owner: umccr
-          repo: gatk-bwamem-jni
-          tag: ${{ github.event.workflow_run.head_commit.id }}
-          asset_name: '*.so,*.dylib'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          path: downloaded_artifacts
 
-      - name: Copy Artifacts to Resources
+      - name: List Downloaded Artifacts
+        run: ls -R downloaded_artifacts
+
+      - name: Move Artifacts to Resources
         run: |
-          cp *.so *.dylib ./build/resources/main/
-          find ./build
+          find downloaded_artifacts -type f -name "*.so" -exec cp {} ./build/resources/main/ \;
+          find downloaded_artifacts -type f -name "*.dylib" -exec cp {} ./build/resources/main/ \;
 
 #      - name: Publish package
 #        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
