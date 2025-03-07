@@ -8,13 +8,12 @@ on:
     branches:
       - master
   workflow_run:
-    workflows: ["blobs"]
+    workflows: ["release"]
     types:
       - completed
 
 jobs:
   build:
-    environment: ${{ inputs.environment }}
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
