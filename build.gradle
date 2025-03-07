@@ -23,7 +23,7 @@ signing {
     sign publishing.publications
 }
 
-final pkg_version = "1.1.2" // Manually bumped version, future TODO: integrate better w/ git and CI/CD
+final version = versionDetails().lastTag
 String cpath = "src/main/c"
 String libname = "libbwa"
 
@@ -83,7 +83,7 @@ mavenPublishing {
   // Publish to Maven Central
   publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
   signAllPublications()
-  coordinates("org.umccr.java", "gatk-bwamem-jni", pkg_version)
+  coordinates("org.umccr.java", "gatk-bwamem-jni", version)
 
   pom {
     name = "gatk-bwamem-jni"
