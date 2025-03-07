@@ -8,7 +8,7 @@ on:
     branches:
       - multiplatform_libbwa_blobs
   workflow_run:
-    workflows: ["Generate libbwa blobs"]
+    workflows: ["blobs"]
     types:
       - completed
   workflow_dispatch:
@@ -21,6 +21,7 @@ on:
 jobs:
   build:
     environment: ${{ inputs.environment }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # Only run if blobs.yml succeeded
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

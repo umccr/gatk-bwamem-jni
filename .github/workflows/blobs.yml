@@ -1,4 +1,4 @@
-name: Generate libbwa blobs
+name: blobs
 
 on:
   push:
