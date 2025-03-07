@@ -1,7 +1,8 @@
 name: build
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
+  actions: read
 
 on:
   push:
@@ -41,18 +42,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Download Artifacts from blobs.yml
+      - name: Download Artifacts from blobs.yml workflow run
         uses: actions/download-artifact@v4
         with:
-          path: downloaded_artifacts
+          path: ./build/resources/main/
+          github-token: $GITHUB_TOKEN
 
       - name: List Downloaded Artifacts
-        run: ls -R downloaded_artifacts
-
-      - name: Move Artifacts to Resources
-        run: |
-          find downloaded_artifacts -type f -name "*.so" -exec cp {} ./build/resources/main/ \;
-          find downloaded_artifacts -type f -name "*.dylib" -exec cp {} ./build/resources/main/ \;
+        run: ls -alr ./build/resources/main
 
       - name: Publish package
         run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
