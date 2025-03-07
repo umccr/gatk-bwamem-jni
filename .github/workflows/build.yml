@@ -7,8 +7,10 @@ on:
   push:
     branches:
       - master
+    tags:
+      - '*'
   workflow_run:
-    workflows: ["release"]
+    workflows: ["blobs"]
     types:
       - completed
 
