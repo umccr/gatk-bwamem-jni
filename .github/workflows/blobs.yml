@@ -3,7 +3,7 @@ name: blobs
 on:
   push:
      branches:
-       - multiplatform_libbwa_blobs
+       - master
     tags:
       - 'v*'
   workflow_dispatch:

@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     branches:
-      - multiplatform_libbwa_blobs
+      - master
   workflow_run:
     workflows: ["blobs"]
     types:
