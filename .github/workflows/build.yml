@@ -147,9 +147,12 @@ jobs:
       - name: Download Artifacts from blobs.yml workflow run
         uses: actions/download-artifact@v4
         with:
-          path: ./build/resources/main/
+          path: artifacts
 
-      - name: List Downloaded Artifacts
+      - name: Move artifacts to build resources
+        run: mv artifacts/* ./build/resources/main/
+
+      - name: List build resources
         run: ls -alr ./build/resources/main
 
       - name: Publish package
