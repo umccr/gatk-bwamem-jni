@@ -150,7 +150,7 @@ jobs:
           path: artifacts
 
       - name: Move artifacts to build resources
-        run: mv artifacts/* ./build/resources/main/
+        run: mv artifacts/*/* ./build/resources/main/
 
       - name: List build resources
         run: ls -alr ./build/resources/main
