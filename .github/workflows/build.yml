@@ -110,88 +110,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Run build with Gradle wrapper
         run: ./gradlew build --scan
 
       - name: Upload build reports
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: build-reports
           path: **/build/reports/
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-#      - name: Build with Gradle
-#        run: ./gradlew build
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: libbwa.win-x86_64.dll
-#          path: ./build/resources/main/libbwa.win-x86_64.dll
-
-  # release_arch_blobs_on_github:
-  #   needs: [build-linux-aarch64, build-linux-x86_64, build-macos-intel, build-macos-arm64]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Download all artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: artifacts
-
-  #     - name: List downloaded artifacts
-  #       run: ls -R artifacts
-
-  #     - name: Create GitHub Release
-  #       uses: softprops/action-gh-release@v2
-  #       with:
-  #         files: artifacts/*/*
-  #         body: "Automated release of prebuilt native libraries for gatk-bwamem-jni"
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # publish_maven:
-  #   needs: [release_arch_blobs_on_github]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         submodules: 'true'
-
-  #     - name: Set up dependencies
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get install -y build-essential gradle
-
-  #     - name: Set up Maven Central Repository
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         java-version: '17'
-  #         distribution: 'corretto'
-
-  #     - name: Setup Gradle
-  #       uses: gradle/actions/setup-gradle@v4
-
-  #     - name: Build with Gradle
-  #       run: ./gradlew build
-
-  #     - name: Download Artifacts from blobs.yml workflow run
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: artifacts
-
-  #     - name: Move artifacts to build resources
-  #       run: mv artifacts/*/* ./build/resources/main/
-
-  #     - name: List build resources
-  #       run: ls -alr ./build/resources/main
-
-#      - name: Publish package
-#        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
-#        env:
-#          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
-#          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
-#          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-#          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID }}
-#          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
