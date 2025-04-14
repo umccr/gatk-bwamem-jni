@@ -110,15 +110,25 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+
+      - name: Run build with Gradle wrapper
+        run: ./gradlew build --scan
+
+      - name: Upload build reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-reports
+          path: **/build/reports/
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: libbwa.win-x86_64.dll
-          path: ./build/resources/main/libbwa.win-x86_64.dll
+#      - name: Build with Gradle
+#        run: ./gradlew build
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: libbwa.win-x86_64.dll
+#          path: ./build/resources/main/libbwa.win-x86_64.dll
 
   # release_arch_blobs_on_github:
   #   needs: [build-linux-aarch64, build-linux-x86_64, build-macos-intel, build-macos-arm64]
