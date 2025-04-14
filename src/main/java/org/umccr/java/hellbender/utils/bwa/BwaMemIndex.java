@@ -462,11 +462,17 @@ public final class BwaMemIndex implements AutoCloseable {
                             } else {
                                 libName = "/libbwa.linux-x86_64.so";
                             }
+                        } else if (osName.contains("windows")) {
+                            if (osArch.equals("x64")) {
+                                libName = "/libbwa.win-x64.dll";
+                            } else {
+                                libName = "/libbwa.win-x64.dll";
+                            }
                         } else {
                             throw new IllegalStateException(
-                                "We have pre-built fermi-lite binaries only for Linux and Mac. " +
+                                "We have pre-built fermi-lite binaries only for Linux, Mac and Windows" +
                                 "Your os.name is " + osName + ". " +
-                                "Set property LIBBWA_PATH to point to a native library for your operating system.");
+                                "Set property LIBBWA_PATH to point to a native library for your architecture and operating system.");
                         }
 
                         try (final InputStream is = BwaMemIndex.class.getResourceAsStream(libName)) {
