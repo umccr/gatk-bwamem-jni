@@ -4,15 +4,20 @@ permissions:
   pull-requests: write
   actions: read
 
-on:
-  push:
-    tags:
-      - '*'
+on: push
+#on:
+#  push:
+#    tags:
+#      - '*'
 
 jobs:
   build-linux-aarch64:
     runs-on: ubuntu-24.04-arm
     steps:
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "20.1.5"
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -34,132 +39,132 @@ jobs:
           name: libbwa.linux-aarch64.so
           path: ./build/resources/main/libbwa.linux-aarch64.so
 
-  build-linux-x86_64:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Set up dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gradle
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: libbwa.linux-x86_64.so
-          path: ./build/resources/main/libbwa.linux-x86_64.so
+  # build-linux-x86_64:
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: true
+  #     - name: Set up dependencies
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y build-essential gradle
+  #     - name: Set up Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         java-version: '17'
+  #         distribution: 'corretto'
+  #     - name: Build with Gradle
+  #       run: ./gradlew build
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: libbwa.linux-x86_64.so
+  #         path: ./build/resources/main/libbwa.linux-x86_64.so
 
-  build-macos-intel:
-    runs-on: macos-13
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: libbwa.osx-x86_64.dylib
-          path: ./build/resources/main/libbwa.osx-x86_64.dylib
+  # build-macos-intel:
+  #   runs-on: macos-13
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: true
+  #     - name: Set up Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         java-version: '17'
+  #         distribution: 'corretto'
+  #     - name: Build with Gradle
+  #       run: ./gradlew build
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: libbwa.osx-x86_64.dylib
+  #         path: ./build/resources/main/libbwa.osx-x86_64.dylib
 
-  build-macos-arm64:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: libbwa.osx-arm64.dylib
-          path: ./build/resources/main/libbwa.osx-arm64.dylib
+  # build-macos-arm64:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: true
+  #     - name: Set up Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         java-version: '17'
+  #         distribution: 'corretto'
+  #     - name: Build with Gradle
+  #       run: ./gradlew build
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: libbwa.osx-arm64.dylib
+  #         path: ./build/resources/main/libbwa.osx-arm64.dylib
 
-  release_arch_blobs_on_github:
-    needs: [build-linux-aarch64, build-linux-x86_64, build-macos-intel, build-macos-arm64]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
+  # release_arch_blobs_on_github:
+  #   needs: [build-linux-aarch64, build-linux-x86_64, build-macos-intel, build-macos-arm64]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download all artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: artifacts
 
-      - name: List downloaded artifacts
-        run: ls -R artifacts
+  #     - name: List downloaded artifacts
+  #       run: ls -R artifacts
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/*/*
-          body: "Automated release of prebuilt native libraries for gatk-bwamem-jni"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Create GitHub Release
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         files: artifacts/*/*
+  #         body: "Automated release of prebuilt native libraries for gatk-bwamem-jni"
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish_maven:
-    needs: [release_arch_blobs_on_github]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: 'true'
+  # publish_maven:
+  #   needs: [release_arch_blobs_on_github]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: 'true'
 
-      - name: Set up dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gradle
+  #     - name: Set up dependencies
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y build-essential gradle
 
-      - name: Set up Maven Central Repository
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'corretto'
+  #     - name: Set up Maven Central Repository
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         java-version: '17'
+  #         distribution: 'corretto'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+  #     - name: Setup Gradle
+  #       uses: gradle/actions/setup-gradle@v4
 
-      - name: Build with Gradle
-        run: ./gradlew build
+  #     - name: Build with Gradle
+  #       run: ./gradlew build
 
-      - name: Download Artifacts from blobs.yml workflow run
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
+  #     - name: Download Artifacts from blobs.yml workflow run
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: artifacts
 
-      - name: Move artifacts to build resources
-        run: mv artifacts/*/* ./build/resources/main/
+  #     - name: Move artifacts to build resources
+  #       run: mv artifacts/*/* ./build/resources/main/
 
-      - name: List build resources
-        run: ls -alr ./build/resources/main
+  #     - name: List build resources
+  #       run: ls -alr ./build/resources/main
 
-      - name: Publish package
-        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+  #     - name: Publish package
+  #       run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+  #       env:
+  #         ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
+  #         ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
+  #         ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+  #         ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID }}
+  #         ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
