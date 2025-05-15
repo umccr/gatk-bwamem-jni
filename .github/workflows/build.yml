@@ -15,9 +15,11 @@ jobs:
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
+        uses: ZhongRuoyu/setup-llvm@v0
+#        uses: KyleMayes/install-llvm-action@v2
         with:
-          version: "20.1.5"
+           llvm-version: 20.1.5
+#          version: "20.1.5"
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
