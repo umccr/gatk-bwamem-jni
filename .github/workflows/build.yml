@@ -18,7 +18,7 @@ jobs:
         uses: ZhongRuoyu/setup-llvm@v0
 #        uses: KyleMayes/install-llvm-action@v2
         with:
-           llvm-version: 20.1.5
+           llvm-version: 20
 #          version: "20.1.5"
       - name: Checkout repository
         uses: actions/checkout@v4
